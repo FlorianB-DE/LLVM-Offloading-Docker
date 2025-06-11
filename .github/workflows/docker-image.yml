@@ -41,6 +41,11 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.REPO }}
 
+    - name: Get current date
+      id: date
+      run: |
+        echo "{date}={$(date +'%Y-%m-%d')}" >> $GITHUB_STATE
+
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
@@ -48,7 +53,7 @@ jobs:
         push: true
         platforms: linux/amd64
         tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO }}:${{ github.event.repository.updated_at}}
+            ${{ env.REGISTRY }}/${{ env.REPO }}:${{ env.date }}
             ${{ env.REGISTRY }}/${{ env.REPO }}:latest
         build-args: |
             GITHUB_ACTOR=${{ github.actor }}
